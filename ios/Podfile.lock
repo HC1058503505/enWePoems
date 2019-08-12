@@ -1,4 +1,6 @@
 PODS:
+  - flustars (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - flutter_plugin_tts (0.0.1):
     - Flutter
@@ -14,7 +16,8 @@ PODS:
     - FMDB (~> 2.7.2)
 
 DEPENDENCIES:
-  - Flutter (from `.symlinks/flutter/ios-release`)
+  - flustars (from `.symlinks/plugins/flustars/ios`)
+  - Flutter (from `.symlinks/flutter/ios`)
   - flutter_plugin_tts (from `.symlinks/plugins/flutter_plugin_tts/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
@@ -25,8 +28,10 @@ SPEC REPOS:
     - FMDB
 
 EXTERNAL SOURCES:
+  flustars:
+    :path: ".symlinks/plugins/flustars/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios-release"
+    :path: ".symlinks/flutter/ios"
   flutter_plugin_tts:
     :path: ".symlinks/plugins/flutter_plugin_tts/ios"
   path_provider:
@@ -37,6 +42,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqflite/ios"
 
 SPEC CHECKSUMS:
+  flustars: 68f8784f3841ce82350ef82598e3b5bc29c36532
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
   flutter_plugin_tts: 258f8b89983547b2276eafe2d67b1f93079a29a3
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
@@ -46,4 +52,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: e9e6b2d1b4659eb7ca9c31439eb8716d7d418981
 
-COCOAPODS: 1.7.4
+COCOAPODS: 1.7.5

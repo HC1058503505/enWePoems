@@ -32,9 +32,7 @@ class _MineRecordsState extends State<MineRecords> {
   }
 
   void _getCollections() async {
-    PoemRecommendProvider provider = PoemRecommendProvider.singleton;
     await provider.open(DatabasePath);
-//    await provider.getRecords();
     provider
         .getPoemRecomsPaging(tableName: tableRecords, limit: 10, page: _page)
         .then((collectionList) {
@@ -44,6 +42,10 @@ class _MineRecordsState extends State<MineRecords> {
 
       if (_page == 0) {
         _records.clear();
+      }
+
+      for (PoemRecommend recommend in collectionList) {
+        recommend.from = "records";
       }
 
       setState(() {
@@ -89,7 +91,8 @@ class _MineRecordsState extends State<MineRecords> {
     );
   }
 
-  void sureClear() {
+  void sureClear() async {
+    await provider.open(DatabasePath);
     provider.deleteAll(tableName: tableRecords).then((dynamic) {
       Navigator.of(context).pop();
       showToast("清除成功");
@@ -102,6 +105,21 @@ class _MineRecordsState extends State<MineRecords> {
     }).whenComplete(() {});
   }
 
+  void sliderDelete(int index) async {
+    await provider.open(DatabasePath);
+    provider
+        .delete(
+        tableName: tableRecords, id: _records[index].idnew)
+        .then((dynamic) {
+      showToast("删除浏览记录成功");
+
+      setState(() {
+        _records.removeAt(index);
+      });
+    }).catchError((error) {
+      showToast("删除浏览记录失败");
+    }).whenComplete(() {});
+  }
   void clearCollections() {
     if (!Platform.isIOS && !Platform.isMacOS) {
       showDialog(
@@ -198,20 +216,7 @@ class _MineRecordsState extends State<MineRecords> {
                   },
                 ),
                 onDismissed: (direction) {
-                  PoemRecommendProvider provider =
-                      PoemRecommendProvider.singleton;
-                  provider
-                      .delete(
-                          tableName: tableCollection, id: _records[index].idnew)
-                      .then((dynamic) {
-                    showToast("删除浏览记录成功");
-
-                    setState(() {
-                      _records.removeAt(index);
-                    });
-                  }).catchError((error) {
-                    showToast("删除浏览记录失败");
-                  }).whenComplete(() {});
+                  sliderDelete(index);
                 },
                 background: new Container(color: Colors.red),
               );

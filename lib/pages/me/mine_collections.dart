@@ -41,7 +41,6 @@ class _MineCollectionsState extends State<MineCollections> {
   }
 
   void _getCollections() async {
-    PoemRecommendProvider provider = PoemRecommendProvider.singleton;
     await provider.open(DatabasePath);
     String tableNameStr =
         widget.collectionsType == MineCollectionsType.colloections
@@ -58,6 +57,9 @@ class _MineCollectionsState extends State<MineCollections> {
         _collections.clear();
       }
 
+      for (PoemRecommend recommend in collectionList) {
+        recommend.from = "collection";
+      }
       setState(() {
         _collections.addAll(collectionList);
       });
@@ -101,7 +103,8 @@ class _MineCollectionsState extends State<MineCollections> {
     );
   }
 
-  void sureClear() {
+  void sureClear() async {
+    await provider.open(DatabasePath);
     provider.deleteAll(tableName: tableCollection).then((dynamic) {
       Navigator.of(context).pop();
       showToast("清除成功");
@@ -110,6 +113,22 @@ class _MineCollectionsState extends State<MineCollections> {
       });
     }).catchError((error) {
       showToast("清除失败");
+    }).whenComplete(() {});
+  }
+
+  void sliderDelete(int index) async {
+    await provider.open(DatabasePath);
+    provider
+        .delete(
+        tableName: tableCollection,
+        id: _collections[index].idnew)
+        .then((dynamic) {
+      showToast("删除$_tipStr成功");
+      setState(() {
+        _collections.removeAt(index);
+      });
+    }).catchError((error) {
+      showToast("删除$_tipStr失败");
     }).whenComplete(() {});
   }
 
@@ -209,20 +228,7 @@ class _MineCollectionsState extends State<MineCollections> {
                   },
                 ),
                 onDismissed: (direction) {
-                  PoemRecommendProvider provider =
-                      PoemRecommendProvider.singleton;
-                  provider
-                      .delete(
-                          tableName: tableCollection,
-                          id: _collections[index].idnew)
-                      .then((dynamic) {
-                    showToast("删除$_tipStr成功");
-                    setState(() {
-                      _collections.removeAt(index);
-                    });
-                  }).catchError((error) {
-                    showToast("删除$_tipStr失败");
-                  }).whenComplete(() {});
+                  sliderDelete(index);
                 },
                 background: new Container(color: Colors.red),
               );

@@ -31,7 +31,7 @@ dependencies:
   azlistview: ^0.1.1
   sqflite: ^1.1.5
   oktoast: ^2.1.9
-  flustars: ^0.2.6+1
+  flustars: ^0.2.5
   flutter_swiper: ^1.1.6
 
 dev_dependencies:
