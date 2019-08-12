@@ -6,6 +6,7 @@ import 'package:flutterapp/models/strings.dart';
 import 'package:flustars/flustars.dart';
 import 'package:flutterapp/models/colors.dart';
 import 'package:flutterapp/pages/ad/ad_page.dart';
+import 'package:oktoast/oktoast.dart';
 
 void main() => runApp(MyApp());
 
@@ -45,25 +46,29 @@ class _MyAppState extends State<MyApp> {
     // 建表
     createCollectionTable();
 
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData.light().copyWith(
-        primaryColor: _themeColor,
-        accentColor: _themeColor,
-        indicatorColor: Colors.white,
-      ),
-      home: Stack(
-        children: <Widget>[
-          RootPage(title: '古诗文斋'),
-          Offstage(
-            offstage: true,
-            child: ADPage((finished) {
-              setState(() {
-                _hideAd = finished;
-              });
-            }),
-          )
-        ],
+    return OKToast(
+      textPadding: EdgeInsets.all(10),
+      dismissOtherOnShow: true,
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData.light().copyWith(
+          primaryColor: _themeColor,
+          accentColor: _themeColor,
+          indicatorColor: Colors.white,
+        ),
+        home: Stack(
+          children: <Widget>[
+            RootPage(title: '古诗文斋'),
+            Offstage(
+              offstage: true,
+              child: ADPage((finished) {
+                setState(() {
+                  _hideAd = finished;
+                });
+              }),
+            )
+          ],
+        ),
       ),
     );
   }

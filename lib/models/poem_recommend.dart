@@ -13,6 +13,8 @@ final String columnTag = "tag"; // 标签
 final String columnFrom = "fromType"; // 来源类型
 final String columnCollection = "isCollection";
 final String columnDateTime = "dateTime";
+final String columnLangsongAuthor = "langsongAuthor";
+final String columnLangsongAuthorPY = "langsongAuthorPY";
 
 class PoemRecommend {
   String idnew = ""; // 诗词新id
@@ -24,13 +26,17 @@ class PoemRecommend {
   String from = "poem"; // 来源类型
   bool isCollection = false;
   String dateTime = "";
+  String langsongAuthor = "";
+  String langsongAuthorPY = "";
   PoemRecommend(
       {this.idnew,
       this.nameStr,
       this.author,
       this.chaodai,
       this.cont,
-      this.tag});
+      this.tag,
+      this.langsongAuthor,
+      this.langsongAuthorPY});
 
   PoemRecommend.parseJSON(Map<String, dynamic> poem) {
     idnew = poem["idnew"].toString().replaceAll(RegExp("null"), "");
@@ -49,6 +55,10 @@ class PoemRecommend {
         .replaceAll(RegExp("<div class=\'small\'></div>"), "\n\n")
         .trim();
     tag = poem["tag"].toString().replaceAll(RegExp("null"), "");
+    langsongAuthor =
+        poem["langsongAuthor"].toString().replaceAll(RegExp("null"), "");
+    langsongAuthorPY =
+        poem["langsongAuthorPY"].toString().replaceAll(RegExp("null"), "");
   }
 
   Map<String, dynamic> toMap() {
@@ -61,7 +71,9 @@ class PoemRecommend {
       columnTag: tag,
       columnFrom: from,
       columnCollection: isCollection,
-      columnDateTime: dateTime
+      columnDateTime: dateTime,
+      columnLangsongAuthor: langsongAuthor,
+      columnLangsongAuthorPY: langsongAuthorPY
     };
   }
 
@@ -71,17 +83,14 @@ class PoemRecommend {
     author = map[columnAuthor].toString().replaceAll(RegExp("null"), "");
     chaodai = map[columnChaodai].toString().replaceAll(RegExp("null"), "");
     cont = map[columnCont];
-//        .toString()
-//        .replaceAll(RegExp("null"), "")
-//        .replaceAll(RegExp("<(\/)?p>"), "")
-//        .replaceAll(RegExp("<br \/>"), "\n")
-//        .replaceAll(RegExp("[\(|（].*[\)|）]"), "")
-//        .replaceAll(RegExp("<span.*span>"), "")
-//        .trim();
     tag = map[columnTag].toString().replaceAll(RegExp("null"), "");
     isCollection = (map[columnCollection] as int == 1);
     from = map[columnFrom].toString().replaceAll(RegExp("null"), "");
     dateTime = map[columnDateTime].toString().replaceAll(RegExp("null"), "");
+    langsongAuthor =
+        map[columnLangsongAuthor].toString().replaceAll(RegExp("null"), "");
+    langsongAuthorPY =
+        map[columnLangsongAuthorPY].toString().replaceAll(RegExp("null"), "");
   }
 }
 
@@ -108,7 +117,9 @@ create table if not exists $tableCollection(
   $columnTag text not null,
   $columnFrom text not null,
   $columnCollection bool not null,
-  $columnDateTime text not null)
+  $columnDateTime text not null,
+  $columnLangsongAuthor text not null,
+  $columnLangsongAuthorPY text not null)
 ''');
 
       await db.execute('''
@@ -122,7 +133,9 @@ create table if not exists $tableRecords(
   $columnTag text not null,
   $columnFrom text not null,
   $columnCollection bool not null,
-  $columnDateTime text not null)
+  $columnDateTime text not null,
+  $columnLangsongAuthor text not null,
+  $columnLangsongAuthorPY text not null)
 ''');
     });
   }
@@ -147,7 +160,9 @@ create table if not exists $tableRecords(
           columnTag,
           columnFrom,
           columnCollection,
-          columnDateTime
+          columnDateTime,
+          columnLangsongAuthor,
+          columnLangsongAuthorPY
         ],
         where: '$columnIdnew = ?',
         whereArgs: [id]);
@@ -169,7 +184,9 @@ create table if not exists $tableRecords(
           columnTag,
           columnFrom,
           columnCollection,
-          columnDateTime
+          columnDateTime,
+          columnLangsongAuthor,
+          columnLangsongAuthorPY
         ],
         limit: limit,
         distinct: true,

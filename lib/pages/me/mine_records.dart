@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutterapp/models/poem_recommend.dart';
 import 'package:flutterapp/pages/recommand/poem_cell.dart';
 import 'package:flutterapp/pages/detail/poem_detail.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oktoast/oktoast.dart';
 import 'dart:io';
 import 'package:flutterapp/pages/taglist/poems_list_cell.dart';
 
@@ -16,6 +16,7 @@ class _MineRecordsState extends State<MineRecords> {
   int _page = 0;
   List<PoemRecommend> _records = List<PoemRecommend>();
   ScrollController _scrollController = ScrollController();
+  PoemRecommendProvider provider = PoemRecommendProvider.singleton;
   @override
   void initState() {
     // TODO: implement initState
@@ -63,7 +64,8 @@ class _MineRecordsState extends State<MineRecords> {
     // TODO: implement dispose
     super.dispose();
     _scrollController.dispose();
-    Fluttertoast.cancel();
+    provider.close();
+    dismissAllToast();
   }
 
   @override
@@ -88,22 +90,15 @@ class _MineRecordsState extends State<MineRecords> {
   }
 
   void sureClear() {
-    PoemRecommendProvider provider = PoemRecommendProvider.singleton;
-    provider.deleteAll().then((dynamic) {
+    provider.deleteAll(tableName: tableRecords).then((dynamic) {
       Navigator.of(context).pop();
-      Fluttertoast.showToast(
-          msg: "清除成功",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER);
+      showToast("清除成功");
 
       setState(() {
         _records.clear();
       });
     }).catchError((error) {
-      Fluttertoast.showToast(
-          msg: "清除失败",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER);
+      showToast("清除失败");
     }).whenComplete(() {});
   }
 
@@ -209,19 +204,13 @@ class _MineRecordsState extends State<MineRecords> {
                       .delete(
                           tableName: tableCollection, id: _records[index].idnew)
                       .then((dynamic) {
-                    Fluttertoast.showToast(
-                        msg: "删除浏览记录成功",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER);
+                    showToast("删除浏览记录成功");
 
                     setState(() {
                       _records.removeAt(index);
                     });
                   }).catchError((error) {
-                    Fluttertoast.showToast(
-                        msg: "删除浏览记录失败",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER);
+                    showToast("删除浏览记录失败");
                   }).whenComplete(() {});
                 },
                 background: new Container(color: Colors.red),

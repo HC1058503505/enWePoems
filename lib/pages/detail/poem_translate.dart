@@ -4,10 +4,12 @@ import 'package:flutterapp/tools/LogUtils.dart';
 import 'package:flutterapp/tools/dio_manager.dart';
 import 'package:flutter_plugin_tts/flutter_plugin_tts.dart';
 
+typedef TranslateCallback = void Function(bool finish);
+
 class PoemTranslateView extends StatefulWidget {
   final PoemRecommend poem;
-
-  PoemTranslateView({this.poem});
+  final TranslateCallback callback;
+  PoemTranslateView({this.poem, this.callback});
 
   @override
   State<StatefulWidget> createState() {
@@ -52,17 +54,6 @@ class PoemTranslateViewState extends State<PoemTranslateView> {
       child: Column(
         children: <Widget>[
           Container(
-            child: IconButton(
-                icon: Icon(
-                  Icons.headset,
-                  color: Theme.of(context).primaryColor,
-                ),
-                onPressed: () {
-                  FlutterPluginTts.speak(enCont);
-                }),
-            alignment: Alignment.centerRight,
-          ),
-          Container(
             color: Colors.white,
             child: Text(
 //              enPoemName,
@@ -104,7 +95,7 @@ class PoemTranslateViewState extends State<PoemTranslateView> {
                 decoration: TextDecoration.none,
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -129,7 +120,13 @@ class PoemTranslateViewState extends State<PoemTranslateView> {
       });
     }).catchError((error) {
       LogUtils.e("translatetranslate", "3" + error.toString());
-    }).whenComplete(() {});
+    }).whenComplete(() {
+      bool finished = enCont.length > 0 &&
+          enAssert.length > 0 &&
+          enChaodai.length > 0 &&
+          poem.nameStr.length > 0;
+      widget.callback(finished);
+    });
   }
 
   void translateAuthor(String author) async {
@@ -151,7 +148,13 @@ class PoemTranslateViewState extends State<PoemTranslateView> {
       });
     }).catchError((error) {
       LogUtils.e("translatetranslate3", "3" + error.toString());
-    }).whenComplete(() {});
+    }).whenComplete(() {
+      bool finished = enCont.length > 0 &&
+          enAssert.length > 0 &&
+          enChaodai.length > 0 &&
+          poem.nameStr.length > 0;
+      widget.callback(finished);
+    });
   }
 
   void translateChaodai(String src) async {
@@ -174,7 +177,13 @@ class PoemTranslateViewState extends State<PoemTranslateView> {
           });
         })
         .catchError((error) {})
-        .whenComplete(() {});
+        .whenComplete(() {
+          bool finished = enCont.length > 0 &&
+              enAssert.length > 0 &&
+              enChaodai.length > 0 &&
+              poem.nameStr.length > 0;
+          widget.callback(finished);
+        });
   }
 
   void translateCont(String cont) {
@@ -202,7 +211,13 @@ class PoemTranslateViewState extends State<PoemTranslateView> {
         });
       }).catchError((error) {
         LogUtils.e("translatetranslate", "3" + error.toString());
-      }).whenComplete(() {});
+      }).whenComplete(() {
+        bool finished = enCont.length > 0 &&
+            enAssert.length > 0 &&
+            enChaodai.length > 0 &&
+            poem.nameStr.length > 0;
+        widget.callback(finished);
+      });
     }
   }
 }

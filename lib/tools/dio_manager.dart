@@ -18,19 +18,16 @@ class DioManager {
     _dio = Dio(options);
   }
 
-
   static DioManager singleton = DioManager._init();
 
   factory DioManager() => singleton;
 
-  Future<String> translate({path,params}) async {
+  Future<String> translate({path, params}) async {
     _dio.options.baseUrl = "http://fanyi.youdao.com/";
-    LogUtils.e("translatetranslate", params.toString());
     Response response = await _dio.get(path, queryParameters: params);
-    var responseStr = response.data as Map<String,dynamic>;
+    var responseStr = response.data as Map<String, dynamic>;
     var arr = responseStr['translation'] as List<dynamic>;
 //    String responseStr = "{"translation": "LimeYin", "query": "石灰吟", "errorCode": "0"}";
-    LogUtils.e("translatetranslate", "2"+arr[0]);
 //    var responseJson = json.decode(responseStr);
 
     return arr[0];
